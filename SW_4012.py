@@ -17,6 +17,7 @@ def div(x,k):
             visit[i] = 0
 
 
+T = int(input())
 for t in range(1,T+1):
     N = int(input())
     food = [list(map(int,input().split())) for _ in range(N)]
