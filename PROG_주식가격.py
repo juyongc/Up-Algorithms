@@ -1,30 +1,23 @@
-from itertools import permutations as permu
-
-
-def solution(numbers):
-    every = []
-    # 모든 순열 찾기
-    for i in range(1, len(numbers) + 1):
-        every += list(permu(numbers, i))
-    every = list(set(every))    # 중복 제거
-    candidate = []  # int값 담을 리스트
-    # 각 튜플을 문자열로 만든후, int 변환
-    for num in every:
-        now = ''
-        for val in num:
-            now += val
-        candidate.append(int(now))
-    candidate = list(set(candidate))    # 중복 제거
-    cnt = 0     # 소수 카운팅용
-    for candi in candidate:
-        if candi == 0 or candi == 1:    # 0,1은 제외
-            continue
-        flag = 0    # 소수인지 체크
-        for i in range(2, candi):
-            if candi % i == 0:  # 나눠떨어지면 소수 아님
-                flag = 1
+def solution(prices):
+    answer = [0] * len(prices)  # 정답 리스트
+    stack = []                  # 안떨어진 가격 인덱스
+    stack.append(0)
+    now = 1
+    # 마지막 인덱스까지 비교
+    while now < len(prices):
+        cur = prices[now]       # 현재 가격
+        # 모든 answer[스택값] += 1 
+        for num in stack:
+            answer[num] += 1
+        # 스택 마지막값부터 비교
+        # 떨어지면 pop / 아니면 break
+        while stack:
+            val = stack[-1]
+            if prices[val] > cur:
+                stack.pop()
+            else:
                 break
-        if flag == 0:   # 소수면 => 카운팅 ++
-            cnt += 1
+        stack.append(now)   # 현재 가격 인덱스 추가
+        now += 1            # 다음 인덱스
 
-    return cnt
+    return answer
