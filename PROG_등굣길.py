@@ -1,32 +1,26 @@
-from collections import deque
 def solution(m, n, puddles):
     answer = 0
-    avoid = [[0]*m for _ in range(n)]
-    for val in puddles:
-        y,x = val[0]-1,val[1]-1
-        avoid[x][y] = 1
-    visit = [[0]*m for _ in range(n)]
-    visit[0][0] = 1
+    # set으로 변경 및 좌표 (행,열) 변경
+    puddle_set = set()
+    for puddle in puddles:
+        puddle_set.add((puddle[1],puddle[0]))
     
-    dx = [1,-1,0,0]
-    dy = [0,0,1,-1]
-    q = deque()
-    if avoid[0][1] == 0:
-        q.append([0,1])
-    if avoid[1][0] == 0:
-        q.append([1,0])
-    while q:
-        x,y = q.popleft()
-        # 이미 합한 전적이 있으면 continue
-        if visit[x][y] != 0:
-            continue
-        for k in range(4):
-            a,b = x+dx[k],y+dy[k]
-            if 0<=a<n and 0<=b<m and avoid[a][b] == 0:
-                if k == 0 or k == 2:        # 우/하면
-                    if visit[a][b] == 0:    # 방문한적 없으면 append
-                        q.append([a,b])
-                else:                           # 좌/상이면
-                    visit[x][y] += visit[a][b]  # 더하기
-    answer = visit[n-1][m-1] % 1000000007       # 결과값
+    dx = [1,0]
+    dy = [0,1]
+    
+    dp = [[0]*m for _ in range(n)]
+    dp[0][0] = 1
+    # dp => 상,우 이동가능하면 dp[상,우] += dp[현재]
+    for x in range(n):
+        for y in range(m):
+            
+            if (x+1,y+1) in puddle_set:
+                continue
+            
+            for k in range(2):
+                r,c = x+dx[k],y+dy[k]
+                if 0<=r<n and 0<=c<m and (r+1,c+1) not in puddle_set:
+                    dp[r][c] += dp[x][y]
+                    
+    answer = dp[-1][-1] % 1000000007
     return answer
