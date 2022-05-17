@@ -1,21 +1,24 @@
 def solution(id_list, report, k):
     answer = [0]*len(id_list)
     id_dict = {}
+    # 유저 순서 딕셔너리화
     for i in range(len(id_list)):
         id_dict[id_list[i]] = i
     
-    report = list(set(report))
-    report_tot = {}
+    reported = {}
+    # {신고된 유저 : set(신고한 유저)} 딕셔너리화
     for rep in report:
-        reporter, reported = rep.split()
-        if reported not in report_tot:
-            report_tot[reported] = [reporter]
+        reporter,user = rep.split(" ")
+        if user not in reported:
+            reported[user] = {reporter}
         else:
-            report_tot[reported].append(reporter)
-    
-    for key,val in report_tot.items():
-        if len(val) >= k:
-            for v in val:
-                answer[id_dict[v]] += 1
+            reported[user].add(reporter)
+    # k번 이상 신고된 유저 찾기 & 신고한 유저 카운팅해주기
+    for key,val in reported.items():
+        if len(val) < k:
+            continue
+        reporter_list = list(val)
+        for name in reporter_list:
+            answer[id_dict[name]] += 1
     
     return answer
