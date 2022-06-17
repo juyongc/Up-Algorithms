@@ -7,7 +7,7 @@ def dij(s,n,w):
     mini[s] = 0
     heapq.heappush(hq,(mini[s],s))
     # 현재 노드 방문처리
-    # 방문 가능한 미방문지와 값 비교 후, 최소값이면 갱신    
+    # 방문 가능한 미방문지와 값 비교 후, 최소값이면 갱신
     while hq:
         val,now = heapq.heappop(hq)
         visit[now] = 1
